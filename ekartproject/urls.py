@@ -17,8 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from ekartApp import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HomeView.as_view(),name="home_view"),
-]
+    path('home', views.HomeView.as_view(),name="home_view"),
+    path('product/<int:id>', views.ProductView.as_view(),name="product_view"),
+    path('register', views.UserRegisterView.as_view(),name="reg_view"),
+    path('', views.UserLoginView.as_view(),name="log_view"),
+    path('add/cart/<int:id>', views.AddtoCartView.as_view(),name="add_to_cart"),
+    path('logout', views.LogoutView.as_view(),name="logout"),
+    path('cartlist', views.CartListView.as_view(),name="cartlist_view"),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
