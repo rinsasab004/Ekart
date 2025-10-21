@@ -1,13 +1,14 @@
 from django.shortcuts import render,redirect
 from django.views import View
 from django.views.generic import TemplateView
-from ekartApp.models import Product,Cart
+from ekartApp.models import Product,Cart,Order
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
-from ekartApp.forms import UserRegisterForm,UserLoginForm,CartForm
+from ekartApp.forms import UserRegisterForm,UserLoginForm,CartForm,OrderForm
 from django.utils.decorators import method_decorator
 from ekartApp.authentication import login_required
+from django.core.mail import send_mail,settings
 
 # Create your views here.
 
@@ -88,6 +89,53 @@ class CartListView(View):
     def get(self,request):
         cart_list=Cart.objects.filter(user=request.user,status='in-cart')
         return render(request,'cart_list.html',{'cartlist':cart_list})
+    
+class PlaceOrderView(View):
+    def get(self,request,**kwargs):
+        form=OrderForm()
+        return  render(request,'add_to_cart.html',{'form':form})
+    
+    def post(self,request,**kwargs):
+        user=request.user
+        email=user.email
+        cart_instance=Cart.objects.get(id=kwargs.get("id"))
+        address=request.POST.get("address")
+        Order.objects.create(address=address,user=user,cart=cart_instance)
+        cart_instance.status="order-placed"
+        cart_instance.save()
+
+        subject = "Order Placed Successfully!"
+        message = f"""
+        Hi {user.username},
+
+        Thank you for your order! 🎉
+
+        Your order has been successfully placed.
+        Shipping Address: {address}
+
+        We will notify you when your order is shipped.
+
+        Best regards,
+        Ekart Team
+        """
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+
+        try:
+            send_mail(subject, message, from_email, recipient_list)
+        except Exception as e:
+            print("Email sending failed:", e)
+
+        return render(request, 'order_success.html', {'user': user})
+    
+
+class OrderListView(View):
+    def get(self,request):
+        orders=Order.objects.filter(user=request.user,status='order-placed')
+        return render(request,'order_placed.html',{'orders':orders})
+    
+    
+
 
     
 

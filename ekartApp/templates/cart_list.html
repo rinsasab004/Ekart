@@ -3,6 +3,8 @@
 {% block content %}
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
+
+        {% if cartlist %}
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for cart in cartlist %}
             <div class="col mb-5">
@@ -20,13 +22,24 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="">Order</a>
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                href="{% url 'place_order' cart.id %}">Order</a>
                         </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        {% else %}
+
+        <div class="text-center mt-5">
+            <h4>Your cart is empty 🛍</h4>
+            <a href="{% url 'home_view' %}" class="btn btn-primary mt-3">Shop Now</a>
+        </div>
+
+
+        {% endif %}
     </div>
 </section>
 {% endblock %}

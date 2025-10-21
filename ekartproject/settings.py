@@ -62,7 +62,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'ekartApp.context_processors.cart_count'
+                'ekartApp.context_processors.cart_count',
+                'ekartApp.context_processors.order_count'
             ],
         },
     },
@@ -122,3 +123,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_HOST_USER="rinsasabirrrrr@gmail.com"
+EMAIL_HOST_PASSWORD="jrdleutasvqjddlb"
+EMAIL_USE_TLS=True
+

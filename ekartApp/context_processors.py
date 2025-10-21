@@ -1,4 +1,4 @@
-from ekartApp.models import Cart
+from ekartApp.models import Cart,Order
 
 
 def cart_count(request):
@@ -7,3 +7,10 @@ def cart_count(request):
         return{'count':count}
     else:
         return{'count':0}
+    
+def order_count(request):
+    if request.user.is_authenticated:
+        count=Order.objects.filter(user=request.user).count()
+        return{'OrderCount':count}
+    else:
+        return{'OrderCount':0}
